@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Affaires conclues par entreprise - SDV Nantes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #F1F4F6;
+  --surface: #FFFFFF;
+  --surface-2: #E8EDF1;
+  --ink: #1B2733;
+  --muted: #5A6976;
+  --line: #D8DFE5;
+  --green: #0E7C66;
+  --green-ink: #0A5F4E;
+  --fill: rgba(14,124,102,.20);
+  --fill-top: rgba(14,124,102,.44);
+  --focus: #0E7C66;
+  --display: 'Bricolage Grotesque', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  --body: 'Instrument Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1821;
+    --surface: #17222D;
+    --surface-2: #223140;
+    --ink: #E6EDF3;
+    --muted: #9AA9B7;
+    --line: #2B3B4B;
+    --green: #3CCB9F;
+    --green-ink: #6FE0BC;
+    --fill: rgba(60,203,159,.22);
+    --fill-top: rgba(60,203,159,.46);
+    --focus: #6FE0BC;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1821;
+  --surface: #17222D;
+  --surface-2: #223140;
+  --ink: #E6EDF3;
+  --muted: #9AA9B7;
+  --line: #2B3B4B;
+  --green: #3CCB9F;
+  --green-ink: #6FE0BC;
+  --fill: rgba(60,203,159,.22);
+  --fill-top: rgba(60,203,159,.46);
+  --focus: #6FE0BC;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); height: 100%; }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0; min-height: 100%;
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 15px; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }
+
+/* En-tête */
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 4.2vw, 38px); line-height: 1.1; margin: 0 0 14px; letter-spacing: -.01em; }
+.lede { font-size: clamp(17px, 2.2vw, 20px); line-height: 1.45; max-width: 62ch; margin: 0 0 6px; }
+.lede b { font-weight: 600; }
+.base-note { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 70ch; }
+
+/* Filtres */
+.controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; margin: 22px 0 26px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.ctl { display: flex; align-items: center; gap: 10px; }
+.ctl > span { color: var(--muted); font-size: 13.5px; }
+.seg { display: inline-flex; background: var(--surface-2); border-radius: 8px; padding: 3px; gap: 2px; }
+.seg button { border: 0; background: transparent; padding: 5px 12px; border-radius: 6px; font-size: 14px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: 0 0 0 1px var(--line); }
+select { font: inherit; font-size: 14px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; }
+.check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: var(--green); margin: 0; }
+
+/* Classement */
+.grid { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); gap: 36px; align-items: start; }
+h2 { font-family: var(--display); font-weight: 700; font-size: 20px; margin: 0 0 4px; letter-spacing: -.005em; }
+.sub { color: var(--muted); font-size: 13.5px; margin: 0 0 14px; }
+.board { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.brow { width: 100%; display: grid; grid-template-columns: 26px minmax(0,1fr) 30px; align-items: center; gap: 10px; background: none; border: 0; padding: 0; text-align: left; }
+.rk { font-family: var(--display); font-weight: 500; color: var(--muted); text-align: right; font-size: 15px; font-variant-numeric: tabular-nums; }
+.bar { position: relative; height: 36px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+.fill { position: absolute; inset: 0 auto 0 0; background: var(--fill); border-radius: 6px 0 0 6px; transition: width .35s ease; }
+.fill.top { background: var(--fill-top); }
+.nm { position: absolute; inset: 0; display: flex; align-items: center; padding: 0 12px; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ct { font-family: var(--display); font-weight: 700; font-size: 20px; text-align: right; font-variant-numeric: tabular-nums; }
+.brow:hover .nm { text-decoration: underline; text-underline-offset: 3px; }
+.rest { color: var(--muted); font-size: 13.5px; margin: 12px 0 0; }
+.empty { color: var(--muted); margin: 8px 0; }
+
+aside section + section { margin-top: 30px; }
+.mini { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+.mini li { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 10px; align-items: baseline; font-size: 14px; }
+.mini .t { height: 6px; background: var(--surface-2); border-radius: 3px; grid-column: 1 / -1; overflow: hidden; }
+.mini .t i { display: block; height: 100%; background: var(--muted); opacity: .55; border-radius: 3px; }
+.mini li.on .t i { background: var(--green); opacity: 1; }
+.mini li.on .l { font-weight: 600; }
+.mini .v { font-variant-numeric: tabular-nums; font-weight: 600; }
+.insight { font-size: 14px; color: var(--muted); margin: 14px 0 0; }
+.insight b { color: var(--ink); font-weight: 600; }
+
+/* Tableau */
+.table-sec { margin-top: 48px; }
+.table-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 12px; }
+.search { position: relative; }
+.search { width: min(320px, 100%); }
+.search input { font: inherit; font-size: 14px; width: 100%; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
+.search input::placeholder { color: var(--muted); }
+.twrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; min-width: 860px; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; font-size: 13px; color: var(--muted); background: var(--surface); white-space: nowrap; }
+th button { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: inherit; display: inline-flex; gap: 5px; align-items: center; }
+th[aria-sort="ascending"] button, th[aria-sort="descending"] button { color: var(--ink); }
+th .ar { font-size: 10px; opacity: .8; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+#tbl > tbody > tr > td:nth-child(2) { min-width: 250px; }
+td.c-rk { color: var(--muted); font-variant-numeric: tabular-nums; width: 44px; }
+td.aff { font-family: var(--display); font-weight: 700; font-size: 16px; }
+td.small { color: var(--muted); }
+.co { background: none; border: 0; padding: 0; text-align: left; font-weight: 600; font-size: 14px; display: inline-flex; gap: 8px; align-items: baseline; }
+.co .chev { display: inline-block; width: 10px; color: var(--muted); font-size: 10px; transition: transform .15s ease; }
+.co[aria-expanded="true"] .chev { transform: rotate(90deg); }
+tr.detail > td { background: var(--bg); padding: 4px 12px 14px 56px; }
+.deals { width: 100%; min-width: 0; font-size: 13px; }
+.deals th, .deals td { padding: 6px 14px 6px 0; border-bottom: 1px solid var(--line); background: transparent; white-space: nowrap; }
+.deals tr:last-child td { border-bottom: 0; }
+.more { margin-top: 12px; }
+.btn { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 8px 14px; font-size: 14px; }
+.btn:hover { border-color: var(--green); color: var(--green-ink); }
+.foot { color: var(--muted); font-size: 13px; margin-top: 10px; }
+
+@media (max-width: 820px) {
+  .grid { grid-template-columns: 1fr; gap: 32px; }
+  .wrap { padding: 22px 14px 48px; }
+  tr.detail > td { padding-left: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fill, .co .chev { transition: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Affaires conclues par entreprise</h1>
+    <p class="lede" id="lede"></p>
+    <p class="base-note" id="basenote"></p>
+  </header>
+
+  <div class="controls" role="group" aria-label="Filtres">
+    <div class="ctl">
+      <span id="lbl-year">Année de clôture</span>
+      <div class="seg" id="years" role="group" aria-labelledby="lbl-year"></div>
+    </div>
+    <div class="ctl">
+      <label for="origin"><span>Origine</span></label>
+      <select id="origin"></select>
+    </div>
+    <label class="check"><input type="checkbox" id="sdv"> Inclure SDV Nantes - Initial</label>
+  </div>
+
+  <div class="grid">
+    <section aria-labelledby="h-board">
+      <h2 id="h-board">Les entreprises qui reviennent le plus</h2>
+      <p class="sub">Nombre d'affaires conclues. Cliquez sur une entreprise pour voir le détail.</p>
+      <ol class="board" id="board"></ol>
+      <p class="rest" id="rest"></p>
+    </section>
+    <aside>
+      <section aria-labelledby="h-orig">
+        <h2 id="h-orig">D'où viennent les affaires</h2>
+        <p class="sub" id="orig-sub"></p>
+        <ul class="mini" id="origins"></ul>
+      </section>
+      <section aria-labelledby="h-long">
+        <h2 id="h-long">Combien d'affaires par entreprise</h2>
+        <p class="sub">Nombre d'entreprises selon leur volume.</p>
+        <ul class="mini" id="buckets"></ul>
+        <p class="insight" id="insight"></p>
+      </section>
+    </aside>
+  </div>
+
+  <section class="table-sec" id="table-sec" aria-labelledby="h-table">
+    <div class="table-head">
+      <div>
+        <h2 id="h-table">Toutes les entreprises</h2>
+        <p class="sub" style="margin:0">Cliquez sur un en-tête pour trier, sur une entreprise pour voir ses affaires.</p>
+      </div>
+      <div class="search"><input type="search" id="q" placeholder="Rechercher une entreprise" aria-label="Rechercher une entreprise"></div>
+    </div>
+    <div class="twrap"><table id="tbl"></table></div>
+    <div class="more" id="more"></div>
+    <p class="foot" id="foot"></p>
+  </section>
+</div>
+
+<script>
+const DATA = [{"cand":"VIOLLETTE Samuel","ent":"VINCI CONSTRUCTION FRANCE - NANTES","form":"M1 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-09-11","close":"2026-09-11","fdl":false,"m1":null,"m2":null},{"cand":"DURIBREUX David","ent":"INETUM","form":"M1 DO","care":"Shanelle TABLEAU","orig":"Fidélisation","open":"2026-08-28","close":"2026-08-28","fdl":false,"m1":9013.0,"m2":9013.0},{"cand":"JOSEPH Célien","ent":"USTS / Innovative Web Agency","form":"M1 DEV","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-08-27","close":"2026-08-27","fdl":true,"m1":9770.0,"m2":9770.0},{"cand":"RAFALINIAINA Radolaza","ent":"FEEL AGILE","form":"M2 CS","care":"YOUEN AVERTY","orig":"Prospection","open":"2026-08-27","close":"2026-08-27","fdl":true,"m1":9774.0,"m2":9774.0},{"cand":"DEFFAF Abderrahmane","ent":"AIA INGENIERIE - AIA LIFE DESIGNERS","form":"M1 BD","care":"Shanelle TABLEAU","orig":"Prospection","open":"2026-08-26","close":"2026-08-27","fdl":true,"m1":10200.0,"m2":10200.0},{"cand":"MICHELET Lilian","ent":"PAPREC FRANCE","form":"M1 DO","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2026-08-19","close":"2026-08-19","fdl":true,"m1":10774.0,"m2":10774.0},{"cand":"BARRY Oumar","ent":"DEPARTEMENT DE LA VENDEE","form":"M1 BD","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2026-08-19","close":"2026-08-19","fdl":true,"m1":9332.57,"m2":9332.57},{"cand":"FACELINA Olivier","ent":"CAPGEMINI TECHNOLOGY SERVICES","form":"M2 DEV","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2026-08-12","close":"2026-08-13","fdl":true,"m1":10556.0,"m2":null},{"cand":"CUSSONNEAU Mathis","ent":"LA BANQUE POSTALE","form":"M1 DEV","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-08-05","close":"2026-08-06","fdl":true,"m1":11056.0,"m2":11056.0},{"cand":"MAHE Gwendal","ent":"CIBTP","form":"B3 DEV, M1 DEV","care":"Shanelle TABLEAU","orig":"Fidélisation","open":"2026-08-03","close":"2026-08-12","fdl":true,"m1":10556.0,"m2":10556.0},{"cand":"IGIRANEZA Gloria","ent":"ARKEA FINANCEMENT & SERVICES","form":"M2 DEV","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2026-07-17","close":"2026-08-03","fdl":true,"m1":12140.0,"m2":null},{"cand":"BILLAUD Nathalie","ent":"DGA TECH NANTES","form":"M1 DEV","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-07-16","close":"2026-07-16","fdl":true,"m1":12232.0,"m2":12232.0},{"cand":"BAPTISTE Dupuis","ent":"NoBullshit Collective SARL","form":"B3 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2026-07-10","close":"2026-07-16","fdl":true,"m1":11781.0,"m2":null},{"cand":"KINIFFO Maxime","ent":"FIGARO CLASSIFIEDS","form":"M2 DEV","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-07-10","close":"2026-07-20","fdl":true,"m1":10582.0,"m2":null},{"cand":"DEROUICHE Yanis","ent":"MANITOU BF","form":"M1 BD, M1 PO","care":"Shanelle TABLEAU","orig":"Fidélisation","open":"2026-07-08","close":"2026-08-03","fdl":true,"m1":11000.0,"m2":11000.0},{"cand":"SOUILHI Fatima","ent":"DGA TECH NANTES","form":"M1 CS","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2026-07-08","close":"2026-07-08","fdl":true,"m1":12217.0,"m2":12217.0},{"cand":"LEGUY Séverine","ent":"TREEZ","form":"M2 BD","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2026-07-07","close":"2026-07-17","fdl":true,"m1":11768.0,"m2":null},{"cand":"BOURGUIGNON Alexandre","ent":"LUMIPLAN","form":"M1 DEV, M2 DEV","care":"Fabien Fuseau","orig":"Jobboards","open":"2026-07-06","close":"2026-07-27","fdl":true,"m1":9806.0,"m2":9806.0},{"cand":"BODIN Yanis","ent":"FIVES","form":"M2 CS","care":"Shanelle TABLEAU","orig":"Prospection","open":"2026-07-03","close":"2026-07-03","fdl":true,"m1":12084.0,"m2":null},{"cand":"MULIKIHAAMEA Romain","ent":"Angers Loire Développement","form":"M2 CS","care":"YOUEN AVERTY","orig":"Prospection","open":"2026-06-24","close":"2026-06-29","fdl":true,"m1":11962.0,"m2":null},{"cand":"KWEKEM Danielle","ent":"TOTALENERGIES RAFFINAGE CHIMIE","form":"M1 DO","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-06-18","close":"2026-06-18","fdl":true,"m1":12618.0,"m2":12618.0},{"cand":"LIGER Amaël","ent":"VIVIERS DE SAINT-COLOMBAN ET DE KEROMAN","form":"B3 SRC","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-06-18","close":"2026-06-26","fdl":true,"m1":9855.0,"m2":null},{"cand":"DUCHÊNE Maël","ent":"MODO","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2026-06-17","close":"2026-07-08","fdl":true,"m1":5313.0,"m2":5313.0},{"cand":"MAYSOUNABE Adrien","ent":"LUCAS G.","form":"M1 BD, B3 DEV","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-06-17","close":"2026-07-23","fdl":true,"m1":12457.0,"m2":12457.0},{"cand":"BAHUAUD Mathieu","ent":"SOPRA STERIA GROUP","form":"M2 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-06-17","close":"2026-06-17","fdl":true,"m1":12157.0,"m2":null},{"cand":"TOUIJER Amine","ent":"VORWERK FRANCE","form":"M1 BD","care":"Fabien Fuseau","orig":"Fidélisation","open":"2026-06-15","close":"2026-06-15","fdl":true,"m1":10963.0,"m2":10963.0},{"cand":"MARTINET Enzo","ent":"ENEDIS","form":"M1 DEV","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-06-09","close":"2026-06-09","fdl":true,"m1":12232.0,"m2":12232.0},{"cand":"FALEU Diane","ent":"MANITOU BF","form":"M1 BD, M1 PO","care":"Shanelle TABLEAU","orig":"Fidélisation","open":"2026-06-08","close":"2026-07-01","fdl":true,"m1":12702.0,"m2":12702.0},{"cand":"DORIVAL Kelyan","ent":"ORANGE BUSINESS & DECISION","form":"M2 BD","care":"YOUEN AVERTY","orig":"Fidélisation","open":"2026-06-05","close":"2026-06-19","fdl":true,"m1":10930.0,"m2":null},{"cand":"PIAU Maxime","ent":"CAPGEMINI TECHNOLOGY SERVICES","form":"M1 DEV","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-06-01","close":"2026-06-02","fdl":true,"m1":12677.0,"m2":12677.0},{"cand":"TAHEREDDINE Taha","ent":"BNP PARIBAS","form":"M2 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2026-05-21","close":"2026-07-23","fdl":true,"m1":12507.0,"m2":null},{"cand":"COHONER Nolan","ent":"RETAIL VR","form":"M2 DEV","care":"YOUEN AVERTY","orig":"Prospection","open":"2026-05-19","close":"2026-07-01","fdl":true,"m1":11983.0,"m2":null},{"cand":"HERY Malo","ent":"CAISSE D'EPARGNE- NANTES/ORVAULT","form":"M2 BD","care":"YOUEN AVERTY","orig":"Apport candidat","open":"2026-05-19","close":"2026-05-19","fdl":true,"m1":11993.0,"m2":null},{"cand":"JOLIVEL-SAVAGE Raphael","ent":"ADEXCEL","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Prospection","open":"2026-05-19","close":"2026-08-12","fdl":true,"m1":8250.0,"m2":null},{"cand":"BERNARD Alexis","ent":"CGI","form":"M1 BD","care":"YOUEN AVERTY","orig":"Apport candidat","open":"2026-05-13","close":"2026-05-13","fdl":true,"m1":12900.0,"m2":12900.0},{"cand":"TYAL Bouchra","ent":"SHAPERS' FRANCE","form":"M2 BD","care":"Fabien Fuseau","orig":"Fidélisation","open":"2026-05-13","close":"2026-06-10","fdl":true,"m1":12361.0,"m2":null},{"cand":"BEUVE Fanny","ent":"CAPGEMINI TECHNOLOGY SERVICES","form":"M1 DEV","care":"YOUEN AVERTY","orig":"Fidélisation","open":"2026-05-11","close":"2026-06-04","fdl":true,"m1":10313.0,"m2":10313.0},{"cand":"MOLENDI Lucas","ent":"GROUPE ATLANTIC","form":"B3 DEV","care":"Fabien Fuseau","orig":"Prospection","open":"2026-04-30","close":"2026-07-01","fdl":true,"m1":10140.0,"m2":null},{"cand":"MÉNOURY Ethan","ent":"KNORR-BREMSE SYSTEMES FERROVIAIRES FRANCE SA","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2026-04-30","close":"2026-05-12","fdl":true,"m1":12154.0,"m2":null},{"cand":"BLANDIN Edouard","ent":"MCPP FRANCE","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Prospection","open":"2026-04-30","close":"2026-05-12","fdl":true,"m1":11857.0,"m2":null},{"cand":"SEJOURNE Mateo","ent":"TOTAL ENERGIES ELECTRICITE ET GAZ FRANCE","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2026-04-27","close":"2026-05-20","fdl":true,"m1":12769.0,"m2":12769.0},{"cand":"LORET Martin","ent":"DS RESTAURATION","form":"M2 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-04-24","close":"2026-04-24","fdl":true,"m1":10571.0,"m2":null},{"cand":"VOLAND Jordan","ent":"SODEBO","form":"M1 BD, M2 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2026-04-23","close":"2026-05-18","fdl":true,"m1":12233.0,"m2":12233.0},{"cand":"MOREAU Enzo","ent":"INETUM","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Job dating","open":"2026-04-21","close":"2026-05-11","fdl":true,"m1":11751.0,"m2":null},{"cand":"JOUET Dimitri","ent":"INETUM","form":"B3 DEV","care":"Shanelle TABLEAU","orig":"Job dating","open":"2026-04-20","close":"2026-06-04","fdl":true,"m1":11751.0,"m2":null},{"cand":"LIAIGRE Ewan","ent":"LA BANQUE POSTALE","form":"M1 CS","care":"Shanelle TABLEAU","orig":"Prospection","open":"2026-04-16","close":"2026-05-29","fdl":true,"m1":11774.0,"m2":11774.0},{"cand":"PRUNET Thibaut","ent":"U TECH IRIS CARQUEFOU","form":"M1 DO","care":"Shanelle TABLEAU","orig":"Fidélisation","open":"2026-04-14","close":"2026-07-01","fdl":true,"m1":11694.0,"m2":11694.0},{"cand":"THOMAS Matéo","ent":"U TECH IRIS CARQUEFOU","form":"B3 SRC","care":"YOUEN AVERTY","orig":"Apport candidat","open":"2026-04-14","close":"2026-05-07","fdl":true,"m1":12500.0,"m2":null},{"cand":"VALLET Edouard","ent":"SNCF VOYAGEURS","form":"B3 SRC","care":"YOUEN AVERTY","orig":"Apport candidat","open":"2026-04-14","close":"2026-04-09","fdl":true,"m1":11143.0,"m2":null},{"cand":"FORESTIER Samuel","ent":"SOCIETE GENERALE - SIEGE NANTES","form":"M2 PO, M2 PO","care":"Fabien Fuseau","orig":"Appel/mail entrant","open":"2026-04-13","close":"2026-06-05","fdl":true,"m1":10676.0,"m2":null},{"cand":"TYAL Bouchra","ent":"SDV NANTES - INITIAL","form":"M1 BD","care":"YOUEN AVERTY","orig":"Fidélisation","open":"2026-01-09","close":"2026-01-08","fdl":false,"m1":null,"m2":null},{"cand":"GABISSI PEYDHOM Arnold landry","ent":"SDV NANTES - INITIAL","form":"M1 PO","care":"Fabien Fuseau","orig":"Fidélisation","open":"2026-01-07","close":"2026-01-07","fdl":true,"m1":null,"m2":null},{"cand":"COHONER Nolan","ent":"SDV NANTES - INITIAL","form":"M1 DEV","care":"YOUEN AVERTY","orig":"Fidélisation","open":"2025-12-23","close":"2025-12-19","fdl":false,"m1":null,"m2":null},{"cand":"VALLET Edouard","ent":"SDV NANTES - INITIAL","form":"B2","care":"YOUEN AVERTY","orig":"Appel/mail entrant","open":"2025-12-23","close":"2025-12-19","fdl":false,"m1":null,"m2":null},{"cand":"MADOUKOU Geremy","ent":"KODIRIS","form":"B3 SRC","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-12-17","close":"2025-12-17","fdl":true,"m1":11930.0,"m2":null},{"cand":"CHEVET Léo","ent":"U TECH IRIS CARQUEFOU","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2025-12-01","close":"2025-12-22","fdl":true,"m1":12475.0,"m2":null},{"cand":"LIAIGRE Ewan","ent":"U TECH IRIS CARQUEFOU","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2025-11-18","close":"2025-12-18","fdl":true,"m1":12475.0,"m2":null},{"cand":"REVERDY Thibault","ent":"LINEO SOFT","form":"M1 BD","care":"YOUEN AVERTY","orig":"Apport candidat","open":"2025-11-17","close":"2025-11-17","fdl":true,"m1":12900.0,"m2":12900.0},{"cand":"MOREAU Santoine","ent":"HELPLINE","form":"M1 CS","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-11-05","close":"2025-11-06","fdl":true,"m1":10974.0,"m2":10350.0},{"cand":"BAYANE Richard","ent":"SDV NANTES - INITIAL","form":"B1","care":"Fabien Fuseau","orig":"Initial","open":"2025-11-03","close":"2025-11-03","fdl":true,"m1":null,"m2":null},{"cand":"MEIRELES Lucas","ent":"TESSIER ELECTRICITE","form":"M1 BD","care":"Shanelle TABLEAU","orig":"Fidélisation","open":"2025-10-28","close":"2025-10-28","fdl":true,"m1":12000.0,"m2":12000.0},{"cand":"DOUKANDA MAMBOUENI Dreyves","ent":"SDV NANTES - INITIAL","form":"M1 DEV","care":"YOUEN AVERTY","orig":"Initial","open":"2025-10-23","close":"2025-10-22","fdl":true,"m1":null,"m2":null},{"cand":"BEUVE Fanny","ent":"Darty Grand Ouest","form":"B3 DEV","care":"YOUEN AVERTY","orig":"Prospection","open":"2025-10-23","close":"2025-10-20","fdl":true,"m1":9166.0,"m2":null},{"cand":"LE MAY Vassili","ent":"U TECH IRIS CARQUEFOU","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-10-17","close":"2025-11-17","fdl":true,"m1":12500.0,"m2":null},{"cand":"JEROME Thibaud","ent":"CAISSE D'EPARGNE - SAINT-HERBLAIN","form":"M1 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-10-10","close":"2025-10-10","fdl":true,"m1":13578.0,"m2":null},{"cand":"BARRY Mamadou adama","ent":"ETHIQAIS","form":"M2 DEV","care":"YOUEN AVERTY","orig":"Apport candidat","open":"2025-10-10","close":"2025-10-09","fdl":true,"m1":8445.0,"m2":null},{"cand":"MBOCHI Christ","ent":"SDV NANTES - INITIAL","form":"B1","care":"YOUEN AVERTY","orig":"Initial","open":"2025-10-03","close":"2025-10-03","fdl":true,"m1":null,"m2":null},{"cand":"ELEMIN Mohamed","ent":"SDV NANTES - INITIAL","form":"B2","care":"YOUEN AVERTY","orig":"Initial","open":"2025-10-02","close":"2025-10-01","fdl":true,"m1":null,"m2":null},{"cand":"MBAIHINGABE Yanick","ent":"SDV NANTES - INITIAL","form":"B2","care":"Shanelle TABLEAU","orig":"Initial","open":"2025-09-25","close":"2025-09-26","fdl":true,"m1":null,"m2":null},{"cand":"BONSSO Raoul","ent":"SDV NANTES - INITIAL","form":"M1 DEV","care":"Fabien Fuseau","orig":"Initial","open":"2025-09-22","close":"2025-09-22","fdl":true,"m1":null,"m2":null},{"cand":"MABED Thomas","ent":"SECOM","form":"M1 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-09-16","close":"2025-09-16","fdl":true,"m1":12418.0,"m2":12418.0},{"cand":"EBATA MAK Lucien junior","ent":"SDV NANTES - INITIAL","form":"B1","care":"Amélie FEDERAK","orig":"Appel/mail entrant","open":"2025-09-12","close":"2025-09-12","fdl":false,"m1":null,"m2":null},{"cand":"JOLIVEL-SAVAGE Raphael","ent":"SDV NANTES - INITIAL","form":"B2","care":"Amélie FEDERAK","orig":"Appel/mail entrant","open":"2025-09-12","close":"2025-09-12","fdl":false,"m1":null,"m2":null},{"cand":"KIM Isabelle","ent":"ACCK","form":"M1 BD","care":"YOUEN AVERTY","orig":"Apport candidat","open":"2025-09-08","close":"2025-09-08","fdl":true,"m1":null,"m2":null},{"cand":"OSSELIN Paul","ent":"CREDIT AGRICOLE-GROUP INFRASTRUCTURE PLATFORM","form":"M1 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-09-04","close":"2025-09-04","fdl":true,"m1":13208.0,"m2":13208.0},{"cand":"MÉTRO Bryan","ent":"ARTIS","form":"M1 DEV","care":"YOUEN AVERTY","orig":"Apport candidat","open":"2025-08-29","close":"2025-08-29","fdl":true,"m1":12899.0,"m2":12899.0},{"cand":"NDEMENGANE SIMANGOYE Pulcherie","ent":"SDV NANTES - INITIAL","form":"B1","care":"Shanelle TABLEAU","orig":"Initial","open":"2025-08-28","close":"2025-09-04","fdl":true,"m1":null,"m2":null},{"cand":"CHAKIB Hajar","ent":"CIBTP","form":"M1 PO","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-08-26","close":"2025-08-26","fdl":true,"m1":10263.0,"m2":10263.0},{"cand":"N'DAH Ange lauriane mehola","ent":"SDV NANTES - INITIAL","form":"B1","care":"Shanelle TABLEAU","orig":"Initial","open":"2025-08-25","close":"2025-08-26","fdl":true,"m1":null,"m2":null},{"cand":"CROCOMO-CHAUVIN Lucas","ent":"IADVIZE","form":"M2 PO","care":"YOUEN AVERTY","orig":"Apport candidat","open":"2025-08-25","close":"2025-08-26","fdl":true,"m1":9700.0,"m2":null},{"cand":"PAYET Thomas","ent":"DACHSER - SIEGE (LA VERRIE)","form":"B3 DEV","care":"Fabien Fuseau","orig":"Prospection","open":"2025-08-20","close":"2025-08-28","fdl":true,"m1":12590.0,"m2":null},{"cand":"YANSANE Elisabeth","ent":"SNCF VOYAGEURS","form":"M1 PO","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-08-12","close":"2025-08-12","fdl":true,"m1":12093.0,"m2":12093.0},{"cand":"PUBERT Thibaud","ent":"SOPRA STERIA GROUP","form":"B3 DEV","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-08-06","close":"2025-08-06","fdl":true,"m1":12500.0,"m2":null},{"cand":"KEITA Souleymane","ent":"NICOLL - ALIAXIS","form":"M2 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-07-28","close":"2025-07-28","fdl":true,"m1":12900.0,"m2":null},{"cand":"FOKOU DASSI Loris sergeo","ent":"VIBRACOUSTIC","form":"M1 BD","care":"YOUEN AVERTY","orig":"Prospection","open":"2025-07-28","close":"2025-08-11","fdl":true,"m1":11955.62,"m2":11955.62},{"cand":"FORGET Elias","ent":"GROUPE FBO","form":"M1 DEV","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-07-25","close":"2025-07-25","fdl":true,"m1":10013.0,"m2":10013.0},{"cand":"NDAYIZEYE Guy keny","ent":"ACCENS AVOCATS CONSEILS","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2025-07-18","close":"2025-07-18","fdl":true,"m1":9863.0,"m2":9863.0},{"cand":"CANTIN Alexis","ent":"CGI","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2025-07-18","close":"2025-07-18","fdl":true,"m1":12862.0,"m2":12862.0},{"cand":"D'OLIVEIRA Gérard","ent":"CCAS - Activités sociales de l'énergie","form":"M1 BD","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-07-18","close":"2025-09-04","fdl":true,"m1":11923.0,"m2":11923.0},{"cand":"BROUDIN Pierce","ent":"DACHSER - SIEGE (LA VERRIE)","form":"M1 DEV","care":"Fabien Fuseau","orig":"Prospection","open":"2025-07-11","close":"2025-08-12","fdl":true,"m1":11903.0,"m2":11903.0},{"cand":"LANDREAU Léopold","ent":"SDV NANTES - INITIAL","form":"B1","care":"Fabien Fuseau","orig":"Initial","open":"2025-07-11","close":"2025-07-11","fdl":true,"m1":null,"m2":null},{"cand":"APEDO Yohan","ent":"EURIAL LAIT","form":"M1 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-07-11","close":"2025-07-11","fdl":true,"m1":12164.0,"m2":12164.0},{"cand":"MEYER Alan","ent":"MEDLINE","form":"M1 PO","care":"Shanelle TABLEAU","orig":"Appel/mail entrant","open":"2025-07-11","close":"2025-08-29","fdl":true,"m1":11567.0,"m2":11567.0},{"cand":"GARBAA Djibril-amor","ent":"SDV NANTES - INITIAL","form":"B1","care":"Shanelle TABLEAU","orig":"Initial","open":"2025-06-27","close":"2025-06-27","fdl":true,"m1":null,"m2":null},{"cand":"OBAMBI OSSO Damien","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2025-06-27","close":"2025-06-27","fdl":true,"m1":null,"m2":null},{"cand":"DE OLIVEIRA Johnny","ent":"INETUM","form":"M1 PO","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-06-17","close":"2025-07-04","fdl":true,"m1":11013.0,"m2":11013.0},{"cand":"BAHUAUD Mathieu","ent":"IKKS","form":"M1 BD","care":"Shanelle TABLEAU","orig":"Fidélisation","open":"2025-06-16","close":"2025-07-30","fdl":true,"m1":12013.0,"m2":12013.0},{"cand":"RAFALINIAINA Radolaza","ent":"SDV NANTES - INITIAL","form":"M1 CS","care":"Shanelle TABLEAU","orig":"Initial","open":"2025-06-13","close":"2025-06-13","fdl":true,"m1":null,"m2":null},{"cand":"TESSIER Jonas","ent":"KANOMA","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Réseau entreprises","open":"2025-06-12","close":"2025-07-30","fdl":true,"m1":12170.0,"m2":null},{"cand":"KINIFFO Maxime","ent":"REGISTRESECURITE.COM","form":"M1 DEV","care":"Amélie FEDERAK","orig":"Fidélisation","open":"2025-06-05","close":"2025-07-11","fdl":null,"m1":null,"m2":null},{"cand":"BÉGARIE Baptiste","ent":"COMPOSE HOLDCO","form":"M1 BD","care":"Amélie FEDERAK","orig":"Fidélisation","open":"2025-05-28","close":"2025-09-03","fdl":true,"m1":10263.0,"m2":10263.0},{"cand":"MÉNOURY Ethan","ent":"SDV NANTES - INITIAL","form":"B2","care":"Héloïse LERENDU","orig":"Initial","open":"2025-05-28","close":"2025-05-29","fdl":true,"m1":null,"m2":null},{"cand":"BALLENGHIEN Alexis","ent":"KEREIS","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-05-27","close":"2025-06-12","fdl":true,"m1":9976.0,"m2":9976.0},{"cand":"MANANTSOA Mbotiravo","ent":"LE GROUPE LAURE","form":"M1 PO","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-05-27","close":"2025-05-27","fdl":true,"m1":10500.0,"m2":10500.0},{"cand":"THOBIE GORCE Jaouen","ent":"MAIRIE DE SAINT HERBLAIN","form":"M2 PO","care":"Amélie FEDERAK","orig":"Prospection","open":"2025-05-22","close":"2025-06-26","fdl":true,"m1":12900.0,"m2":null},{"cand":"ALLAIRE Mathis","ent":"BOUYGUES TELECOM","form":"M1 BD","care":"Shanelle TABLEAU","orig":"Apport candidat","open":"2025-05-19","close":"2025-05-19","fdl":true,"m1":12535.0,"m2":12535.0},{"cand":"HERY Malo","ent":"ORANGE BUSINESS & DECISION","form":"M1 BD","care":"Ophélie CARTRON","orig":"Apport candidat","open":"2025-05-16","close":"2026-05-21","fdl":true,"m1":11656.0,"m2":9013.0},{"cand":"NGUYEN Anthony","ent":"DATAMA","form":"M1 DEV","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2025-05-16","close":"2025-05-16","fdl":true,"m1":null,"m2":null},{"cand":"GAOUA Nazim","ent":"CAPGEMINI TECHNOLOGY SERVICES","form":"M2 DO","care":"Héloïse LERENDU","orig":"Prospection","open":"2025-05-14","close":"2025-05-14","fdl":true,"m1":9000.0,"m2":9000.0},{"cand":"AMARA Thilissa","ent":"SHOEMAKERS","form":"M1 BD","care":"Héloïse LERENDU","orig":"Prospection","open":"2025-05-06","close":"2025-06-11","fdl":true,"m1":12827.0,"m2":12827.0},{"cand":"VERONNEAU Célia","ent":"CANTORIEL","form":"M1 BD","care":"Amélie FEDERAK","orig":"Prospection","open":"2025-05-06","close":"2027-09-03","fdl":true,"m1":9013.0,"m2":9013.0},{"cand":"REKIK Nour","ent":"CAPGEMINI TECHNOLOGY SERVICES","form":"M1 BD","care":"Héloïse LERENDU","orig":"Prospection","open":"2025-05-05","close":"2025-07-03","fdl":true,"m1":null,"m2":null},{"cand":"DUVAL Adrien","ent":"THALES SIX GTS","form":"M1 DEV","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2025-05-05","close":"2025-05-05","fdl":true,"m1":11140.0,"m2":11140.0},{"cand":"SOUCHET Mathéo","ent":"ENEDIS","form":"M1 DEV","care":"Ophélie CARTRON","orig":"Apport candidat","open":"2025-04-30","close":"2025-04-30","fdl":true,"m1":11773.0,"m2":11773.0},{"cand":"MAVEAU Julien","ent":"SDV NANTES - INITIAL","form":"B1","care":"Shanelle TABLEAU","orig":"Initial","open":"2025-04-16","close":"2025-03-18","fdl":true,"m1":null,"m2":null},{"cand":"ESTERS Noann","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2025-04-16","close":"2025-04-16","fdl":true,"m1":null,"m2":null},{"cand":"RENOUX Anakynn","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2025-04-16","close":"2025-04-16","fdl":true,"m1":null,"m2":null},{"cand":"JEGADEN Vivian","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2025-04-16","close":"2025-04-16","fdl":true,"m1":null,"m2":null},{"cand":"GIRAUDET Theo","ent":"SDV NANTES - INITIAL","form":"B1","care":"Shanelle TABLEAU","orig":"Initial","open":"2025-04-16","close":"2025-04-16","fdl":true,"m1":null,"m2":null},{"cand":"SIMON Ugo","ent":"SNCF Connect & Tech","form":"M1 DEV","care":"Héloïse LERENDU","orig":"Fidélisation","open":"2025-04-11","close":"2025-04-11","fdl":true,"m1":12524.0,"m2":12524.0},{"cand":"BOIZIAU Jules","ent":"ORANGE BUSINESS & DECISION","form":"M1 BD","care":"Ophélie CARTRON","orig":"Apport candidat","open":"2025-04-09","close":"2025-04-09","fdl":true,"m1":9013.0,"m2":9013.0},{"cand":"RONNÉ Kyllian","ent":"FDI MATELEC","form":"M1 DEV","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2025-04-08","close":"2025-04-08","fdl":true,"m1":12900.0,"m2":12900.0},{"cand":"SAINFRANC Mervyn","ent":"WICONNECT","form":"B3 SRC","care":"Ophélie CARTRON","orig":"Apport candidat","open":"2025-04-04","close":"2025-04-04","fdl":true,"m1":12500.0,"m2":null},{"cand":"ASSOGBA Bérénice","ent":"BANQUE POPULAIRE GRAND OUEST","form":"M1 BD","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2025-04-04","close":"2025-04-04","fdl":true,"m1":12511.0,"m2":12511.0},{"cand":"BOUHAYA Achraf","ent":"D.O.D - DECOR OUEST DISTRIBUTION","form":"M1 PO","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-04-01","close":"2025-04-01","fdl":true,"m1":12900.0,"m2":12900.0},{"cand":"GERME Liam","ent":"CAPGEMINI TECHNOLOGY SERVICES","form":"M1 CS","care":"Héloïse LERENDU","orig":"Job dating","open":"2025-04-01","close":"2025-05-20","fdl":true,"m1":11013.0,"m2":11013.0},{"cand":"SAMAKE Cheik oumarou","ent":"CAPGEMINI TECHNOLOGY SERVICES","form":"M1 DEV","care":"Héloïse LERENDU","orig":"Job dating","open":"2025-04-01","close":"2025-05-21","fdl":true,"m1":12524.0,"m2":12524.0},{"cand":"MILLET Arthur","ent":"MINISTERE DE LA JUSTICE","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-03-25","close":"2025-05-06","fdl":true,"m1":10000.0,"m2":10000.0},{"cand":"LÉAUTÉ Guillaume","ent":"ASTORYA","form":"B3 SRC","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2025-03-18","close":"2025-03-18","fdl":true,"m1":12856.0,"m2":null},{"cand":"LORET Martin","ent":"VORWERK FRANCE","form":"M1 BD","care":"Ophélie CARTRON","orig":"Apport candidat","open":"2025-03-14","close":"2025-03-14","fdl":true,"m1":null,"m2":null},{"cand":"MAILLOT Enzo","ent":"INETUM","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-03-07","close":"2025-03-25","fdl":true,"m1":12500.0,"m2":null},{"cand":"TRICOIRE Loriana","ent":"AS24","form":"M1 BD","care":"Shanelle TABLEAU","orig":"Job dating","open":"2025-03-06","close":"2025-04-07","fdl":true,"m1":11773.0,"m2":11773.0},{"cand":"ROUX Baptiste","ent":"YPOCAMP","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-03-06","close":"2025-03-24","fdl":true,"m1":12429.0,"m2":null},{"cand":"LEROUEIL Nathan","ent":"GROUPE MILLET","form":"B3 DEV","care":"Héloïse LERENDU","orig":"Prospection","open":"2025-03-04","close":"2025-03-24","fdl":true,"m1":10405.0,"m2":null},{"cand":"AUVRAY Alexandre","ent":"SIGMA","form":"B3 SRC","care":"Héloïse LERENDU","orig":"Job dating","open":"2025-03-04","close":"2025-05-20","fdl":true,"m1":11589.0,"m2":null},{"cand":"MICLO Coleen","ent":"BNP PARIBAS","form":"M1 DEV, B3 DEV","care":"Héloïse LERENDU","orig":"Prospection","open":"2025-03-04","close":"2025-04-25","fdl":true,"m1":12900.0,"m2":12900.0},{"cand":"VILARASAU POTTIER Eva","ent":"BNP PARIBAS","form":"M1 DEV","care":"Héloïse LERENDU","orig":"Prospection","open":"2025-03-04","close":"2025-04-04","fdl":true,"m1":12900.0,"m2":12900.0},{"cand":"HOUSSIN Keryan","ent":"MINISTERE DES ARMEES","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Job dating","open":"2025-02-20","close":"2025-04-03","fdl":true,"m1":10000.0,"m2":10000.0},{"cand":"MARTINEAU Tomas","ent":"DIXIT-FACILE","form":"M1 DEV","care":"Ophélie CARTRON","orig":"Fidélisation","open":"2025-02-20","close":"2025-02-20","fdl":true,"m1":8800.0,"m2":8500.0},{"cand":"BANZOUZI Craine audrelle","ent":"NICKEL - FINANCIERE DES PAIEMENTS ELECTRONIQUES","form":"M1 PO","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-02-13","close":"2025-04-25","fdl":true,"m1":10013.0,"m2":10013.0},{"cand":"BEURET Simeon","ent":"TOTAL ENERGIES ELECTRICITE ET GAZ FRANCE","form":"M1 BD","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-02-12","close":"2025-04-16","fdl":true,"m1":12524.0,"m2":12524.0},{"cand":"NGUEGUIM Wilfried","ent":"EDGD CONSEIL","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2025-01-28","close":"2025-05-06","fdl":true,"m1":9013.0,"m2":9013.0},{"cand":"BENGUI Providence emerencia","ent":"ROTHSCHILD MARTIN MAUREL","form":"M2 BD","care":"Fabien Fuseau","orig":"Apport candidat","open":"2025-10-14","close":"2025-10-14","fdl":true,"m1":12893.0,"m2":null},{"cand":"LAFORE Léo","ent":"K TECHNOLOGIES","form":"M2 DEV","care":"Shanelle TABLEAU","orig":"Réseau entreprises","open":"2025-07-29","close":"2024-12-31","fdl":true,"m1":9911.0,"m2":null},{"cand":"ARCHAMBAUD Enzo","ent":"GROUPE DUBREUIL SERVICES","form":"M2 DEV","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2025-07-07","close":"2024-12-31","fdl":true,"m1":10000.0,"m2":null},{"cand":"FAURE Titouan","ent":"AIRSEAS","form":"M2 DO","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2025-05-20","close":"2024-12-31","fdl":false,"m1":9983.0,"m2":null},{"cand":"MABIT Sylvain","ent":"AMARRIS GROUPE","form":"M1 PO","care":"Ophélie CARTRON","orig":"Apport candidat","open":"2025-03-28","close":"2024-12-29","fdl":false,"m1":null,"m2":null},{"cand":"MISERIAUD Maxime","ent":"U TECH IRIS CARQUEFOU","form":"M1 CS","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2025-02-26","close":"2024-10-30","fdl":false,"m1":null,"m2":null},{"cand":"BIGOT Paul","ent":"PROGINOV","form":"B3 DEV","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2025-01-06","close":"2025-01-06","fdl":false,"m1":null,"m2":null},{"cand":"DAUTRIAT Antonin","ent":"GROUPE DUBREUIL SERVICES","form":"M1 CS","care":"Héloïse LERENDU","orig":"Prospection","open":"2024-12-13","close":"2024-09-01","fdl":true,"m1":null,"m2":null},{"cand":"THOMAS Luidji","ent":"LEGALYSPACE","form":"B3","care":"Rudy JACQUES","orig":"Fidélisation","open":"2024-11-20","close":"2024-12-03","fdl":false,"m1":null,"m2":null},{"cand":"CAMBOU Alexandre","ent":"EASYTEAM NANTES","form":"M1 DO","care":"Estelle RAINE","orig":"Apport candidat","open":"2024-11-07","close":"2024-11-07","fdl":false,"m1":12900.0,"m2":12900.0},{"cand":"BREGARDIS Matteo","ent":"EDS EMBALLAGE","form":"M1 CS","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2024-10-02","close":"2024-10-02","fdl":false,"m1":10430.0,"m2":10430.0},{"cand":"GABORIT Audrey","ent":"REGISTRESECURITE.COM","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-09-27","close":"2024-09-27","fdl":false,"m1":9013.0,"m2":9013.0},{"cand":"CHANUDET Martin","ent":"SPIE CITYNETWORKS","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-09-20","close":"2024-09-20","fdl":false,"m1":12524.0,"m2":12524.0},{"cand":"BOURSE Marius","ent":"EDEIS INGENIERIE","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-09-03","close":"2024-09-03","fdl":false,"m1":12524.0,"m2":12524.0},{"cand":"BENGUI Providence emerencia","ent":"CANTORIEL","form":"M1 BD","care":"Estelle RAINE","orig":"Apport candidat","open":"2024-08-29","close":"2024-08-29","fdl":false,"m1":9013.0,"m2":9013.0},{"cand":"DJENID Camélia","ent":"SDV NANTES - INITIAL","form":"B1","care":"Ophélie CARTRON","orig":"Initial","open":"2024-08-19","close":"2024-08-19","fdl":false,"m1":null,"m2":null},{"cand":"CISSE Oumar","ent":"SDV NANTES - INITIAL","form":"B1","care":"Ophélie CARTRON","orig":"Initial","open":"2024-08-19","close":"2024-08-19","fdl":false,"m1":null,"m2":null},{"cand":"MAHAMAT DJIBRINE X","ent":"PLAINEMAISON AQUITAINE","form":"M1 BD","care":"Estelle RAINE","orig":"Apport candidat","open":"2024-08-14","close":"2024-08-14","fdl":false,"m1":null,"m2":null},{"cand":"TOUGERON Loucas","ent":"GROUPE FBO","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-08-08","close":"2024-08-08","fdl":false,"m1":10113.0,"m2":10113.0},{"cand":"BEKKOUCHE Othman","ent":"COOPERATIVE U ENSEIGNE CARQUEFOU","form":"M1 BD","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-07-26","close":"2024-07-26","fdl":false,"m1":10983.0,"m2":10983.0},{"cand":"GERME Liam","ent":"BOIS EXPO DISTRIBUTION","form":"B3 SRC","care":"Estelle RAINE","orig":"Apport candidat","open":"2024-07-16","close":"2024-07-16","fdl":false,"m1":9770.0,"m2":null},{"cand":"NICOLAE Andrei-octavian","ent":"ISME","form":"B3 SRC","care":"Estelle RAINE","orig":"Prospection","open":"2024-07-16","close":"2024-07-16","fdl":false,"m1":10930.0,"m2":null},{"cand":"BIDZA ONGALA Maëlys mary ambre","ent":"SDV NANTES - INITIAL","form":"B1","care":"Ophélie CARTRON","orig":"Initial","open":"2024-07-16","close":"2024-07-16","fdl":false,"m1":null,"m2":null},{"cand":"NZASSA EKASSA Christie chaëlle","ent":"CANTORIEL","form":"M1 BD","care":"Estelle RAINE","orig":"Apport candidat","open":"2024-07-15","close":"2024-07-15","fdl":false,"m1":9013.0,"m2":9013.0},{"cand":"BOULAY Jonathan","ent":"CANTORIEL","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-07-15","close":"2024-07-15","fdl":false,"m1":9013.0,"m2":9013.0},{"cand":"LE GURUN Hermann","ent":"SDV NANTES - INITIAL","form":"B1","care":"Ophélie CARTRON","orig":"Initial","open":"2024-07-12","close":"2024-07-12","fdl":false,"m1":null,"m2":null},{"cand":"MBAKOP Bramly","ent":"COVEA - MMA IARD ASSURANCES MUTUELLES","form":"M1 BD","care":"Estelle RAINE","orig":"Prospection","open":"2024-07-12","close":"2024-07-12","fdl":false,"m1":12125.0,"m2":12125.0},{"cand":"BERTHEREAU Constant","ent":"PROGINOV","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Fidélisation","open":"2024-07-11","close":"2024-07-11","fdl":false,"m1":10583.0,"m2":10583.0},{"cand":"PEKASSA NGOUPAYOU Ahmed mounir","ent":"MALAKOFF HUMANIS","form":"M1 BD","care":"Estelle RAINE","orig":"Apport candidat","open":"2024-07-05","close":"2024-07-05","fdl":false,"m1":12149.0,"m2":12149.0},{"cand":"LE PRESSE Marceau","ent":"YPOCAMP","form":"M1 PO","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2024-07-05","close":"2024-07-05","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"IHDEN Rayane","ent":"SDV NANTES - INITIAL","form":"B1","care":"Ophélie CARTRON","orig":"Initial","open":"2024-07-02","close":"2024-07-02","fdl":false,"m1":null,"m2":null},{"cand":"BACOT Romain","ent":"APSIDE NANTES","form":"M1 BD","care":"Estelle RAINE","orig":"Prospection","open":"2024-06-27","close":"2024-08-06","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"NOGUE WAFO Brice","ent":"HOROQUARTZ","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2024-06-26","close":"2024-07-10","fdl":false,"m1":10800.0,"m2":10800.0},{"cand":"SALL Abdourahmane","ent":"GROUPE LE DUFF - BRIDOR","form":"M1 PO","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2024-06-25","close":"2024-06-25","fdl":false,"m1":12131.0,"m2":12131.0},{"cand":"BANZOUZI Craine audrelle","ent":"KER PRO","form":"B3 SRC","care":"Ophélie CARTRON","orig":"Prospection","open":"2024-06-25","close":"2024-07-09","fdl":false,"m1":10770.0,"m2":null},{"cand":"MARTIN Hugo","ent":"GROUPE LE DUFF - BRIDOR","form":"M1 CS","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2024-06-21","close":"2024-06-21","fdl":false,"m1":14024.0,"m2":9013.0},{"cand":"ANDRIAFALIMANANA Malalatiana","ent":"CARSAT Pays de la Loire","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-06-21","close":"2024-06-21","fdl":false,"m1":11100.0,"m2":11100.0},{"cand":"BERHAULT William","ent":"SIGMA","form":"M1 DO","care":"Estelle RAINE","orig":"Prospection","open":"2024-06-18","close":"2024-06-18","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"JOURDAIN ASSOGBAVI Essénam","ent":"COVEA - MMA IARD ASSURANCES MUTUELLES","form":"M1 BD","care":"Ophélie CARTRON","orig":"Prospection","open":"2024-06-17","close":"2024-06-27","fdl":false,"m1":12125.0,"m2":12125.0},{"cand":"MASSONPIERRE Alvin","ent":"LA BANQUE POSTALE","form":"M1 CS","care":"Héloïse LERENDU","orig":"Fidélisation","open":"2024-06-14","close":"2024-06-14","fdl":false,"m1":12900.0,"m2":12900.0},{"cand":"SIMON Ugo","ent":"SNCF Connect & Tech","form":"B3 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-06-12","close":"2024-06-12","fdl":false,"m1":11685.0,"m2":null},{"cand":"YOUSSUFI Najim","ent":"ISME","form":"B3 SRC","care":"Estelle RAINE","orig":"Prospection","open":"2024-06-10","close":"2024-07-16","fdl":false,"m1":10930.0,"m2":null},{"cand":"BIANIC Mathis","ent":"EXPERIS","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2024-06-06","close":"2024-07-16","fdl":false,"m1":11583.0,"m2":11583.0},{"cand":"MESTAIS Maxime","ent":"AMARRIS GROUPE","form":"M1 CS","care":"Héloïse LERENDU","orig":"Fidélisation","open":"2024-06-06","close":"2024-06-06","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"ROULEAU Nathan","ent":"HAUTIER","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-06-05","close":"2024-06-05","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"MARTINEAU Tomas","ent":"DIXIT-FACILE","form":"B3 DEV","care":"Estelle RAINE","orig":"Prospection","open":"2024-06-05","close":"2024-09-12","fdl":false,"m1":null,"m2":null},{"cand":"CORMERAIS Flavio","ent":"GROUPE IDEA","form":"M1 BD","care":"Shanelle TABLEAU","orig":"Prospection","open":"2024-06-03","close":"2024-06-03","fdl":false,"m1":14342.0,"m2":9013.0},{"cand":"BERHAULT Florian","ent":"MOTION4EVER","form":"M1 DO","care":"Estelle RAINE","orig":"Apport candidat","open":"2024-05-31","close":"2024-05-31","fdl":false,"m1":10013.0,"m2":10013.0},{"cand":"FIOLLEAU Alexis","ent":"LA POSTE - DIR RH","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-05-31","close":"2024-05-31","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"HEAS Ilan","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2024-05-24","close":"2024-05-21","fdl":false,"m1":null,"m2":null},{"cand":"BROSSET Lilian","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2024-05-24","close":"2024-04-29","fdl":false,"m1":null,"m2":null},{"cand":"BAPTISTE Dupuis","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2024-05-24","close":"2024-03-22","fdl":false,"m1":null,"m2":null},{"cand":"GUINBERTEAU Johann","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2024-05-24","close":"2024-03-21","fdl":false,"m1":null,"m2":null},{"cand":"BRAUD Thomas","ent":"SDV NANTES - INITIAL","form":"B1","care":"Ophélie CARTRON","orig":"Initial","open":"2024-05-24","close":"2024-03-18","fdl":false,"m1":null,"m2":null},{"cand":"CAILLAUD Nino","ent":"SDV NANTES - INITIAL","form":"B1","care":"Ophélie CARTRON","orig":"Initial","open":"2024-05-24","close":"2024-03-18","fdl":false,"m1":null,"m2":null},{"cand":"ALBERTEAU Théotim","ent":"SDV NANTES - INITIAL","form":"B1","care":"Ophélie CARTRON","orig":"Initial","open":"2024-05-24","close":"2024-03-18","fdl":false,"m1":null,"m2":null},{"cand":"COTILLON Landry","ent":"SDV NANTES - INITIAL","form":"B1","care":"Ophélie CARTRON","orig":"Initial","open":"2024-05-24","close":"2024-03-18","fdl":false,"m1":null,"m2":null},{"cand":"VITROU Vladimir","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2024-05-24","close":"2024-03-18","fdl":false,"m1":null,"m2":null},{"cand":"QUEHE-LE COZLER Ethan","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2024-05-24","close":"2024-03-18","fdl":false,"m1":null,"m2":null},{"cand":"DESBOIS Meven","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2024-05-24","close":"2024-03-18","fdl":false,"m1":null,"m2":null},{"cand":"MOLENDI Lucas","ent":"SDV NANTES - INITIAL","form":"B1","care":"Héloïse LERENDU","orig":"Initial","open":"2024-05-24","close":"2024-03-18","fdl":false,"m1":null,"m2":null},{"cand":"TAJUDJE NGUEMTO Christian","ent":"ORANGE DIRECTION RH - NANTES","form":"M1 PO","care":"Héloïse LERENDU","orig":"Prospection","open":"2024-05-24","close":"2024-05-24","fdl":false,"m1":8750.0,"m2":8750.0},{"cand":"POSSELT Timothée","ent":"NICKEL - FINANCIERE DES PAIEMENTS ELECTRONIQUES","form":"M1 PO","care":"Shanelle TABLEAU","orig":"Prospection","open":"2024-05-24","close":"2024-06-17","fdl":false,"m1":10013.0,"m2":10013.0},{"cand":"BOUHAYA Achraf","ent":"D.O.D - DECOR OUEST DISTRIBUTION","form":"B3 SRC","care":"Charlotte MONASTERIO","orig":"Prospection","open":"2024-05-24","close":"2024-06-18","fdl":false,"m1":11589.0,"m2":null},{"cand":"RIPOLL Julien","ent":"A5SYS","form":"M1 BD","care":"Estelle RAINE","orig":"Prospection","open":"2024-05-23","close":"2024-06-18","fdl":false,"m1":11013.0,"m2":11013.0},{"cand":"DELEPINE Tom","ent":"EDGD CONSEIL","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Fidélisation","open":"2024-05-23","close":"2024-05-23","fdl":false,"m1":9013.0,"m2":9013.0},{"cand":"NOURISSON Victor","ent":"SATELIX","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-05-23","close":"2024-05-23","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"GARAULT Nando","ent":"U TECH IRIS CARQUEFOU","form":"M1 CS","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2024-05-21","close":"2024-05-21","fdl":false,"m1":12524.0,"m2":12524.0},{"cand":"REVERDY Thibault","ent":"LINEO SOFT","form":"B3 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-05-17","close":"2024-05-17","fdl":false,"m1":10930.0,"m2":null},{"cand":"CAPRIN Mathis","ent":"PROGINOV","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Apport candidat","open":"2024-05-14","close":"2024-05-14","fdl":false,"m1":11773.0,"m2":11773.0},{"cand":"AFALLAH Houda","ent":"MICHELIN","form":"M1 PO","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2024-04-25","close":"2024-04-25","fdl":false,"m1":12900.0,"m2":12900.0},{"cand":"LANDAIS Thomas","ent":"HOROQUARTZ","form":"M1 PO","care":"Shanelle TABLEAU","orig":"Prospection","open":"2024-04-24","close":"2024-05-13","fdl":false,"m1":10800.0,"m2":10800.0},{"cand":"JERBI Aimen","ent":"ALSEVE","form":"M1 DEV","care":"Shanelle TABLEAU","orig":"Prospection","open":"2024-04-23","close":"2024-05-30","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"DEVANNE Antonin","ent":"GROUPE HENNER","form":"B3 SRC","care":"Shanelle TABLEAU","orig":"Prospection","open":"2024-04-22","close":"2024-06-18","fdl":false,"m1":11589.0,"m2":null},{"cand":"NORMAND Tom","ent":"SIGMA","form":"B3 SRC","care":"Estelle RAINE","orig":"Prospection","open":"2024-04-18","close":"2024-05-17","fdl":false,"m1":11589.0,"m2":null},{"cand":"MENOURY Esteban","ent":"EXPERIS","form":"M1 CS","care":"Shanelle TABLEAU","orig":"Fidélisation","open":"2024-04-18","close":"2024-04-18","fdl":false,"m1":11583.0,"m2":11583.0},{"cand":"MUKALA Hryon","ent":"INETUM","form":"M1 CS","care":"Shanelle TABLEAU","orig":"Fidélisation","open":"2024-04-18","close":"2024-04-18","fdl":false,"m1":10513.0,"m2":10513.0},{"cand":"SOURISSEAU Basile","ent":"WIBAIE","form":"M1 CS","care":"Ophélie CARTRON","orig":"Prospection","open":"2024-04-16","close":"2024-06-04","fdl":false,"m1":8763.0,"m2":8763.0},{"cand":"CAUSSIGNAC Timothée","ent":"NICKEL - FINANCIERE DES PAIEMENTS ELECTRONIQUES","form":"M1 PO","care":"Shanelle TABLEAU","orig":"Prospection","open":"2024-04-05","close":"2024-04-05","fdl":false,"m1":12900.0,"m2":12900.0},{"cand":"BURGER Julien","ent":"ORANGE BUSINESS & DECISION","form":"M1 BD","care":"Ophélie CARTRON","orig":"Prospection","open":"2024-03-29","close":"2024-06-18","fdl":false,"m1":9013.0,"m2":9013.0},{"cand":"THIREAU Liam","ent":"SOPRA STERIA GROUP","form":"M1 BD","care":"Héloïse LERENDU","orig":"Prospection","open":"2024-03-29","close":"2024-05-17","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"BOUNMY Souvanny","ent":"SOPRA STERIA GROUP","form":"M1 DEV","care":"Héloïse LERENDU","orig":"Prospection","open":"2024-03-29","close":"2024-05-13","fdl":false,"m1":12148.0,"m2":12148.0},{"cand":"PAJOT Julien","ent":"GROUPE ATLANTIC","form":"M1 DEV","care":"Charlotte MONASTERIO","orig":"Fidélisation","open":"2024-03-11","close":"2024-02-23","fdl":false,"m1":12524.0,"m2":12524.0},{"cand":"JOSSE Jade","ent":"PROGINOV","form":"M1 BD","care":"Estelle RAINE","orig":"Apport candidat","open":"2024-03-01","close":"2024-03-01","fdl":false,"m1":12149.0,"m2":12149.0},{"cand":"GUARDANO DA COSTA Filipe","ent":"EUROPEAN SECURITY TRADING - CYLRESC","form":"M1 CS","care":"Héloïse LERENDU","orig":"Fidélisation","open":"2024-02-07","close":"2024-02-07","fdl":false,"m1":10983.0,"m2":10983.0},{"cand":"CROIZIER Jules","ent":"AMEXIO OUEST","form":"M1 DEV","care":"Estelle RAINE","orig":"Prospection","open":"2024-02-05","close":"2024-04-18","fdl":false,"m1":9013.0,"m2":9013.0},{"cand":"FAURE Titouan","ent":"VIGICORP","form":"M1 DO","care":"Héloïse LERENDU","orig":"Apport candidat","open":"2023-12-22","close":"2023-12-22","fdl":false,"m1":null,"m2":null}];
+const SDV = 'SDV NANTES - INITIAL';
+const $ = s => document.querySelector(s);
+const eur = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+const fmtDate = iso => {
+  if (!iso) return '-';
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+const esc = t => String(t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const norm = t => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const plural = (n, one, many) => n > 1 ? many : one;
+
+const state = { year: 'all', origin: 'all', sdv: false, q: '', sortKey: 'n', sortDir: 'desc', open: new Set(), all: false };
+const YEARS = ['2024', '2025', '2026'];
+const ORIGINS = [...new Set(DATA.map(r => r.orig).filter(Boolean))];
+
+function baseRows() {
+  return DATA.filter(r => (state.sdv || r.ent !== SDV) && (state.year === 'all' || r.close.slice(0, 4) === state.year));
+}
+function currentRows() {
+  return baseRows().filter(r => state.origin === 'all' || r.orig === state.origin);
+}
+function aggregate(rs) {
+  const m = new Map();
+  for (const r of rs) {
+    let a = m.get(r.ent);
+    if (!a) {
+      a = { name: r.ent, n: 0, forms: new Set(), origs: new Set(), last: '', fdlYes: 0, fdlKnown: 0, total: 0, hasAmt: false, deals: [] };
+      m.set(r.ent, a);
+    }
+    a.n++;
+    if (r.form) r.form.split(',').forEach(f => a.forms.add(f.trim()));
+    if (r.orig) a.origs.add(r.orig);
+    if (r.close > a.last) a.last = r.close;
+    if (r.fdl !== null) { a.fdlKnown++; if (r.fdl) a.fdlYes++; }
+    if (r.m1 !== null || r.m2 !== null) { a.hasAmt = true; a.total += (r.m1 || 0) + (r.m2 || 0); }
+    a.deals.push(r);
+  }
+  const arr = [...m.values()];
+  arr.sort((a, b) => b.n - a.n || (a.last < b.last ? 1 : a.last > b.last ? -1 : 0) || a.name.localeCompare(b.name, 'fr'));
+  let rank = 0, prev = null;
+  arr.forEach((a, i) => { if (a.n !== prev) { rank = i + 1; prev = a.n; } a.rank = rank; });
+  return arr;
+}
+
+/* ---------- Rendu ---------- */
+function renderControls(rs) {
+  const nAll = baseRows().length;
+  $('#years').innerHTML = [['all', 'Toutes'], ...YEARS.map(y => [y, y])]
+    .map(([v, l]) => `<button type="button" data-year="${v}" aria-pressed="${state.year === v}">${l}</button>`).join('');
+  const counts = {};
+  baseRows().forEach(r => { counts[r.orig] = (counts[r.orig] || 0) + 1; });
+  const opts = ORIGINS.filter(o => counts[o]).sort((a, b) => counts[b] - counts[a]);
+  if (state.origin !== 'all' && !opts.includes(state.origin)) opts.push(state.origin);
+  $('#origin').innerHTML = `<option value="all">Toutes (${nAll})</option>` +
+    opts.map(o => `<option value="${esc(o)}"${state.origin === o ? ' selected' : ''}>${esc(o)} (${counts[o] || 0})</option>`).join('');
+  $('#sdv').checked = state.sdv;
+}
+
+function renderHeader(rs, agg) {
+  const per = state.year === 'all' ? '' : ` clôturées en ${state.year}`;
+  let s;
+  if (!rs.length) {
+    s = 'Aucune affaire ne correspond à ces filtres.';
+  } else {
+    s = `<b>${rs.length}</b> ${plural(rs.length, 'affaire conclue', 'affaires conclues')}${per} avec <b>${agg.length}</b> ${plural(agg.length, 'entreprise', 'entreprises')}.`;
+    const top = agg.filter(a => a.rank === 1);
+    if (agg[0].n === 1) s += ' Chaque entreprise n\'a qu\'une seule affaire.';
+    else if (top.length === 1) s += ` ${esc(top[0].name)} arrive en tête avec ${top[0].n} affaires.`;
+    else if (top.length === 2) s += ` ${esc(top[0].name)} et ${esc(top[1].name)} arrivent en tête, avec ${top[0].n} affaires chacune.`;
+    else s += ` ${top.length} entreprises sont à égalité en tête, avec ${top[0].n} affaires chacune.`;
+  }
+  $('#lede').innerHTML = s;
+  const sdvN = DATA.filter(r => r.ent === SDV && (state.year === 'all' || r.close.slice(0, 4) === state.year)).length;
+  const now = new Date();
+  const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const closes = DATA.map(r => r.close).filter(c => c && c <= todayISO).sort();
+  let note = `Base de ${DATA.length} affaires, clôturées entre le ${fmtDate(closes[0])} et le ${fmtDate(closes[closes.length - 1])}.`;
+  const future = DATA.filter(r => r.close > todayISO);
+  if (future.length) note += ` ${future.length} ${plural(future.length, 'date de clôture est', 'dates de clôture sont')} dans le futur (${future.map(r => esc(r.ent) + ', ' + fmtDate(r.close)).join(' ; ')}) : à vérifier dans la base.`;
+  if (!state.sdv && sdvN) note += ` Les ${sdvN} lignes « SDV NANTES - INITIAL » (formation initiale, sans entreprise partenaire) sont exclues du classement ; cochez la case pour les inclure.`;
+  $('#basenote').innerHTML = note;
+}
+
+function renderBoard(agg) {
+  const el = $('#board');
+  if (!agg.length) { el.innerHTML = '<li class="empty">Aucune affaire pour ces filtres.</li>'; $('#rest').textContent = ''; return; }
+  const cutoff = Math.max(agg[Math.min(9, agg.length - 1)].n, 2);
+  let list = agg.filter(a => a.n >= cutoff);
+  if (!list.length) list = agg.slice(0, 10);
+  if (list.length > 15) list = list.slice(0, 15);
+  const max = agg[0].n;
+  el.innerHTML = list.map(a => `
+    <li><button type="button" class="brow" data-name="${esc(a.name)}" aria-label="${esc(a.name)}, ${a.n} ${plural(a.n, 'affaire', 'affaires')}, rang ${a.rank}">
+      <span class="rk">${a.rank}</span>
+      <span class="bar"><span class="fill${a.rank <= 3 ? ' top' : ''}" style="width:${(a.n / max * 100).toFixed(1)}%"></span><span class="nm">${esc(a.name)}</span></span>
+      <span class="ct">${a.n}</span>
+    </button></li>`).join('');
+  const rest = agg.length - list.length;
+  $('#rest').textContent = rest > 0
+    ? `${rest} autres ${plural(rest, 'entreprise', 'entreprises')}, avec ${agg[list.length].n} ${plural(agg[list.length].n, 'affaire', 'affaires')} ou moins, ${plural(rest, 'figure', 'figurent')} dans le tableau ci-dessous.`
+    : '';
+}
+
+function renderAside(agg) {
+  const rs = baseRows();
+  const counts = {};
+  rs.forEach(r => { const k = r.orig || 'Non renseignée'; counts[k] = (counts[k] || 0) + 1; });
+  const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const max = entries.length ? entries[0][1] : 1;
+  $('#orig-sub').textContent = `Origine des ${rs.length} affaires${state.year === 'all' ? '' : ' de ' + state.year}.`;
+  $('#origins').innerHTML = entries.map(([k, v]) => `
+    <li class="${state.origin === k ? 'on' : ''}"><span class="l">${esc(k)}</span><span class="v">${v}</span><span class="t"><i style="width:${(v / max * 100).toFixed(1)}%"></i></span></li>`).join('');
+
+  const full = aggregate(currentRows());
+  const b1 = full.filter(a => a.n === 1).length, b2 = full.filter(a => a.n === 2).length, b3 = full.filter(a => a.n >= 3).length;
+  const bmax = Math.max(b1, b2, b3, 1);
+  $('#buckets').innerHTML = [['1 affaire', b1], ['2 affaires', b2], ['3 affaires ou plus', b3]].map(([l, v]) => `
+    <li class="${l.startsWith('3') ? 'on' : ''}"><span class="l">${l}</span><span class="v">${v}</span><span class="t"><i style="width:${(v / bmax * 100).toFixed(1)}%"></i></span></li>`).join('');
+  const rsC = currentRows();
+  const dealsTop = full.filter(a => a.n >= 3).reduce((s, a) => s + a.n, 0);
+  $('#insight').innerHTML = full.length
+    ? `<b>${b1}</b> entreprises sur ${full.length} n'ont conclu qu'une affaire (${Math.round(b1 / full.length * 100)} %). Les <b>${b3}</b> entreprises à 3 affaires ou plus concentrent <b>${rsC.length ? Math.round(dealsTop / rsC.length * 100) : 0} %</b> des affaires.`
+    : '';
+}
+
+const COLS = [
+  { key: 'n', label: 'Rang', cls: '' },
+  { key: 'name', label: 'Entreprise', cls: '' },
+  { key: 'n2', label: 'Affaires', cls: 'num', sortKey: 'n' },
+  { key: 'forms', label: 'Formations', cls: '', nosort: true },
+  { key: 'origs', label: 'Origines', cls: '', nosort: true },
+  { key: 'last', label: 'Dernière clôture', cls: '' },
+  { key: 'fdl', label: 'FDL reçues', cls: 'num' },
+  { key: 'total', label: 'Montant cumulé', cls: 'num' }
+];
+const SORTERS = {
+  n: a => a.n, name: a => a.name, last: a => a.last,
+  fdl: a => a.fdlKnown ? a.fdlYes / a.fdlKnown : -1,
+  total: a => a.hasAmt ? a.total : -1
+};
+
+function renderTable(agg) {
+  let list = agg;
+  const q = norm(state.q.trim());
+  if (q) list = list.filter(a => norm(a.name).includes(q));
+  const dir = state.sortDir === 'asc' ? 1 : -1;
+  const f = SORTERS[state.sortKey];
+  list = [...list].sort((a, b) => {
+    const x = f(a), y = f(b);
+    const c = typeof x === 'string' ? x.localeCompare(y, 'fr') : x - y;
+    return c * dir;
+  });
+  const LIMIT = 20;
+  const shown = (state.all || q) ? list : list.slice(0, LIMIT);
+
+  const head = COLS.map(c => {
+    const k = c.sortKey || c.key;
+    if (c.nosort) return `<th class="${c.cls}" scope="col">${c.label}</th>`;
+    const active = state.sortKey === k;
+    const arrow = active ? (state.sortDir === 'asc' ? '▲' : '▼') : '';
+    const aria = active ? (state.sortDir === 'asc' ? 'ascending' : 'descending') : 'none';
+    return `<th class="${c.cls}" scope="col" aria-sort="${aria}"><button type="button" data-sort="${k}">${c.label}<span class="ar" aria-hidden="true">${arrow}</span></button></th>`;
+  }).join('');
+
+  const body = shown.map(a => {
+    const open = state.open.has(a.name);
+    const main = `<tr>
+      <td class="c-rk">${a.rank}</td>
+      <td><button type="button" class="co" data-open="${esc(a.name)}" aria-expanded="${open}"><span class="chev" aria-hidden="true">▶</span>${esc(a.name)}</button></td>
+      <td class="num aff">${a.n}</td>
+      <td class="small">${esc([...a.forms].sort().join(', ')) || '-'}</td>
+      <td class="small">${esc([...a.origs].join(', ')) || '-'}</td>
+      <td>${fmtDate(a.last)}</td>
+      <td class="num">${a.fdlKnown ? a.fdlYes + ' / ' + a.fdlKnown : '-'}</td>
+      <td class="num">${a.hasAmt ? eur.format(a.total) : '-'}</td>
+    </tr>`;
+    if (!open) return main;
+    const deals = [...a.deals].sort((x, y) => (x.close < y.close ? 1 : -1)).map(d => `<tr>
+        <td>${esc(d.cand || '-')}</td><td>${esc(d.form || '-')}</td><td>${esc(d.care || '-')}</td><td>${esc(d.orig || '-')}</td>
+        <td>${fmtDate(d.close)}</td><td>${d.fdl === null ? '-' : d.fdl ? 'Oui' : 'Non'}</td>
+        <td class="num">${d.m1 !== null || d.m2 !== null ? eur.format((d.m1 || 0) + (d.m2 || 0)) : '-'}</td></tr>`).join('');
+    return main + `<tr class="detail"><td colspan="8">
+      <table class="deals"><thead><tr><th>Candidat</th><th>Formation</th><th>CARE</th><th>Origine</th><th>Clôture</th><th>FDL reçue</th><th class="num">Montant</th></tr></thead><tbody>${deals}</tbody></table>
+    </td></tr>`;
+  }).join('');
+
+  $('#tbl').innerHTML = `<thead><tr>${head}</tr></thead><tbody>${body || '<tr><td colspan="8" class="small">Aucune entreprise ne correspond.</td></tr>'}</tbody>`;
+  const hidden = list.length - shown.length;
+  $('#more').innerHTML = (!q && list.length > LIMIT)
+    ? `<button type="button" class="btn" id="toggle-all">${state.all ? 'Réduire la liste' : 'Afficher les ' + list.length + ' entreprises'}</button>` : '';
+  $('#foot').textContent = `${shown.length} ${plural(shown.length, 'entreprise affichée', 'entreprises affichées')} sur ${agg.length}. Montant cumulé : Montant 1 + Montant 2 lorsqu'ils sont renseignés.`;
+}
+
+function render() {
+  const rs = currentRows();
+  const agg = aggregate(rs);
+  renderControls(rs);
+  renderHeader(rs, agg);
+  renderBoard(agg);
+  renderAside(agg);
+  renderTable(agg);
+}
+
+/* ---------- Événements ---------- */
+document.addEventListener('click', e => {
+  const y = e.target.closest('[data-year]');
+  if (y) { state.year = y.dataset.year; state.all = false; render(); document.querySelector(`[data-year="${state.year}"]`).focus({ preventScroll: true }); return; }
+  const s = e.target.closest('[data-sort]');
+  if (s) {
+    const k = s.dataset.sort;
+    if (state.sortKey === k) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+    else { state.sortKey = k; state.sortDir = k === 'name' ? 'asc' : 'desc'; }
+    render(); document.querySelector(`[data-sort="${k}"]`).focus({ preventScroll: true }); return;
+  }
+  const o = e.target.closest('[data-open]');
+  if (o) {
+    const n = o.dataset.open;
+    state.open.has(n) ? state.open.delete(n) : state.open.add(n);
+    render();
+    const btn = [...document.querySelectorAll('[data-open]')].find(b => b.dataset.open === n);
+    if (btn) btn.focus({ preventScroll: true });
+    return;
+  }
+  const b = e.target.closest('.brow');
+  if (b) {
+    const n = b.dataset.name;
+    state.q = n; $('#q').value = n; state.open.add(n);
+    render();
+    $('#table-sec').scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    return;
+  }
+  if (e.target.id === 'toggle-all') { state.all = !state.all; render(); const t = $('#toggle-all'); if (t) t.focus({ preventScroll: true }); }
+});
+$('#origin').addEventListener('change', e => { state.origin = e.target.value; state.all = false; render(); });
+$('#sdv').addEventListener('change', e => { state.sdv = e.target.checked; state.all = false; render(); });
+$('#q').addEventListener('input', e => { state.q = e.target.value; renderTable(aggregate(currentRows())); });
+
+render();
+</script>
+</body>
+</html>
